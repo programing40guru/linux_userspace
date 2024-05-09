@@ -1,0 +1,2 @@
+this will be output to the file name dup.txt
+this will be slo output to the file name dup.txt

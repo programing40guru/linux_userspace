@@ -1,0 +1,6 @@
+mehul add same text to  input.txt file .
+rahul add same text to  input.txt file .
+mehul add same text to  input.txt file .
+mehul add same text to  input.txt file .
+hiren add same text to  input.txt file .
+tarang add same text to  input.txt file .

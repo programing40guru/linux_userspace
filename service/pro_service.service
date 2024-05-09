@@ -1,0 +1,13 @@
+[Unit]
+Description=Pro Services
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/mehul/linux_user/service
+ExecStart=/home/mehul/linux_user/service/c
+Restart=always
+RestartSec=15
+
+[Install]
+WantedBy=multi-user.target

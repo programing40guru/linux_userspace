@@ -1,0 +1,111 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<sys/types.h>
+#include<sys/socket.h>
+#include <errno.h>
+#include <arpa/inet.h>
+#include<unistd.h>
+#include <netinet/in.h>
+#include <string.h>
+#include<sys/select.h>
+#include <signal.h>
+
+void handle_client(int client_socket_fd) {
+    char buffer[256];
+    int n;
+
+    bzero(buffer, sizeof(buffer));
+    n = read(client_socket_fd, buffer, sizeof(buffer));
+    if (n < 0) {
+        perror("Error reading from socket");
+        close(client_socket_fd);
+        return;
+    }
+
+    printf("Received request from client: %s\n", buffer);
+
+    if (strncmp(buffer, "KILL", 4) == 0) {
+        printf("Received KILL command. Killing the process.\n");
+        kill(getpid(), SIGKILL);
+    }
+
+    close(client_socket_fd);
+}
+int main()
+{
+
+  char buf1[10] = {0};	 
+	struct timeval tv;
+	ssize_t valread;
+
+	struct sockaddr_in addr1;
+	fd_set rfds;
+	int retval;
+
+
+	int id = socket(AF_INET,SOCK_STREAM,0); //creat an endpoint for communication
+						//0 number o ip hendler 
+	socklen_t p_frd = (sizeof(addr1));
+
+	if(id<0){
+
+		perror("socket failed and exit .. ");
+		exit(EXIT_FAILURE);
+	}
+
+	addr1.sin_family=AF_INET;
+	addr1.sin_port=htons(8080);
+	addr1.sin_addr.s_addr=INADDR_ANY;//targeted interface make
+
+	if((bind(id,(struct sockaddr *)&addr1,sizeof(addr1))) == -1){
+
+		perror("Bind failed and exit ..");
+		exit(EXIT_FAILURE);
+	}
+
+	if (listen(id, 4) < 0){    //listen 4 connection
+		perror("listen");
+		exit(EXIT_FAILURE);
+	}
+
+	int new_socket;// accept a connection
+	if ((new_socket = accept(id, (struct sockaddr*)&addr1, &p_frd))< 0) {
+		perror("accept");
+		exit(EXIT_FAILURE);
+	}
+	printf("hello i am seirver ..\n");
+	printf("connectting success to client \n");
+	
+	while(1){
+	
+	 handle_client(new_socket);
+	/*
+	 	valread= read(new_socket,buf1,10);
+ printf("%s", buf1);
+  if (strncmp(buf1, "kill", 4) == 0) {
+       
+system("systemctl stop hello.service");
+printf("system kill pro_service.service\n");
+ }
+
+
+else {
+printf("locho ");
+}
+if(strncmp(buf1, "s", 1) == 0) {
+system("systemctl start hello.service");
+
+}
+ 	
+		if(valread == 0){
+			close(new_socket);
+			return 1;	
+		}
+	
+*/	
+}	
+
+close(new_socket);
+close(id);
+return 0;
+}
